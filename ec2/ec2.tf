@@ -1,5 +1,6 @@
 resource "aws_instance" "roboshop" {
-  ami           = "ami-09c813fb71547fc4f"
+  #ami           = "ami-09c813fb71547fc4f"
+  ami           = "data.aws_ami.joindevops.id" #Here We taken from data source folder, data.tf file
   instance_type = "t3.micro"
   vpc_security_group_ids = [ aws_security_group.allowing_all.id ] 
 
