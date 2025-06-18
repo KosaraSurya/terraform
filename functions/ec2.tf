@@ -1,12 +1,16 @@
 resource "aws_instance" "roboshop" {
+  count = length(var.instances) #count baes loop use for list
   ami           = var.ami_id  #In variables we declared ami_id, so we given reference here
   instance_type = var.environment == "dev" ? "t3.micro" : "t2.micro"  #Dont change right side name because it is the syntax in terraform, left side user defined.
   vpc_security_group_ids = [ aws_security_group.allowing_all.id ]
-  count = 4 #count baes loop use for list
 
-  tags = {
-    Name = var.instances[count.index] #count.index is special variable, based on index's we will get instances names 
-  }
+  tags =  merge(
+      var.common_tags,
+      {
+        component = var.instances[count.index] #count.index is special variable, based on index's we will get instances names
+        Name = var.instances[count.index]
+      }
+  )
 }
 
 resource "aws_security_group" "allowing_all" {  #allowing all is tag nme
@@ -28,5 +32,10 @@ resource "aws_security_group" "allowing_all" {  #allowing all is tag nme
         ipv6_cidr_blocks = ["::/0"]
     }
 
-    tags = var.sg_tags
+    tags = merge(
+      var.common_tags,
+      {
+        Name = "allow-all"
+      }
+    )
 }

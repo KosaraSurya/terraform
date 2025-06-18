@@ -56,3 +56,10 @@ variable "zone_id" {
 variable "domain_name"{
     default = "devsecopstrainee.site"
 }
+
+variable "common_tags" {
+    default = {
+        project = "roboshop"
+        terraform = "true"
+    }
+}
